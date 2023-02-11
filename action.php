@@ -195,7 +195,11 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
        
 	}
 	
-	$run_query = mysqli_query($con,$sql);
+	$stmt = mysqli_prepare($con, $sql);
+mysqli_stmt_bind_param($stmt, "s", $cid);
+mysqli_stmt_execute($stmt);
+$run_query = mysqli_stmt_get_result($stmt);
+
 	while($row=mysqli_fetch_array($run_query)){
 			$pro_id    = $row['product_id'];
 			$pro_cat   = $row['product_cat'];
