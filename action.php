@@ -79,20 +79,21 @@ if(isset($_POST["brand"])){
 		echo "</div>";
 	}
 }
-if(isset($_POST["page"])){
-	$cid = $_POST["cid"];
-	$sql = "SELECT * FROM products Where product_cat='$cid'";
-	$run_query = mysqli_query($con,$sql);
-	$count = mysqli_num_rows($run_query);
-	$pageno = ceil($count/9);
-	for($i=1;$i<=$pageno;$i++){
-		echo "
-			<li><a href='#product-row' page='$i' id='page' cid='$cid'  class='active'>$i</a></li>
-            
-            
-		";
-	}
+if (isset($_POST["page"])) {
+  $cid = $_POST["cid"];
+  $stmt = mysqli_prepare($con, "SELECT * FROM products WHERE product_cat=?");
+  mysqli_stmt_bind_param($stmt, "i", $cid);
+  mysqli_stmt_execute($stmt);
+  $run_query = mysqli_stmt_get_result($stmt);
+  $count = mysqli_num_rows($run_query);
+  $pageno = ceil($count / 9);
+  for ($i = 1; $i <= $pageno; $i++) {
+    echo "
+      <li><a href='#product-row' page='$i' id='page' cid='$cid' class='active'>$i</a></li>
+    ";
+  }
 }
+
 if(isset($_POST["getProduct"])){
 	$limit = 9;
 	if(isset($_POST["setPage"])){
