@@ -108,8 +108,12 @@ if(isset($_POST["getProduct"])){
 		$cat_id = $_POST["cat_id"];
 	}
 	
-	$product_query = "SELECT * FROM products,categories WHERE product_cat = '$cat_id' AND product_cat=cat_id LIMIT $start,$limit";
-	$run_query = mysqli_query($con,$product_query);
+	$product_query = "SELECT * FROM products, categories WHERE product_cat = ? AND product_cat = cat_id LIMIT ?, ?";
+$stmt = mysqli_prepare($con, $product_query);
+mysqli_stmt_bind_param($stmt, "iii", $cat_id, $start, $limit);
+mysqli_stmt_execute($stmt);
+$run_query = mysqli_stmt_get_result($stmt);
+
 	if(mysqli_num_rows($run_query) > 0){
 		while($row = mysqli_fetch_array($run_query)){
 			$pro_id    = $row['product_id'];
